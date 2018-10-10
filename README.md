@@ -11,8 +11,8 @@ system of survey.
 
 ## Convert Legal Descriptions to Latitude & Longitude
 
-By converting the legal descriptions to latitude and logitude, people can easily find the location
-of the specific parcel via Google Map. It might ease the steps in doing data collection and furthur
+By converting the legal descriptions to latitude and longitude, people can easily find the location
+of the specific parcel via Google Map. It might ease the steps in doing data collection and further
 analysis.
 
 The script provided in this repo is the prototype version that I implement the ideas from the following
@@ -25,7 +25,7 @@ Sources:
 3. Township and Grid System: http://www.realestatemanitoba.com/module1/unit2/unit2_sess1_township.htm
 
 ## Improvment can be done
-1. Improve the accuracy so that each section even quater in each township can be located
+1. Improve the accuracy so that each section even quarter in each township can be located
 2. Expand the region that the coordinates can bu calculated (not just calculated from the first meridian, maybe second, third, etc.)
 3. Batch conversion
 4. Allow more formats
