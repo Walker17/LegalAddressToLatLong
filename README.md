@@ -16,7 +16,7 @@ of the specific parcel via Google Map. It might ease the steps in doing data col
 analysis.
 
 The script provided in this repo is the prototype version that I implement the ideas from the following
-resources. However, the accuracy of the result is not as good as desired. It might be caused the incorrectly
+resources. However, the accuracy of the result is not as good as desired. It might be caused by the incorrectly
 implementing.
 
 Sources:
