@@ -52,18 +52,18 @@ def extract_info(legal_description):
                            [6,5,4,3,2,1]], dtype=np.int8)
     '''
     list: info_part
-        [0] quater and section
+        [0] quarter and section
         [1] township
         [2] range and direction away from the meridian
     '''
     info_part = legal_description.split('-')
     
-    quater = info_part[0][:2]
+    quarter = info_part[0][:2]
     section = int(info_part[0][2:])
     township = int(info_part[1])
     ran = int(info_part[2][0])
     direction = info_part[2][1]
-    print(quater, section, township, ran, direction)
+    print(quarter, section, township, ran, direction)
     
     # calculate the distance away from the prime meridian/first meridian, also the distance away from the boundary of Canada
     # and United States
@@ -84,14 +84,14 @@ def extract_info(legal_description):
     conv_fac = 1.609344
     
     # calculate the distance to get to each quater
-    if quater == "NW":
+    if quarter == "NW":
         dran_mile += 0.5
         dtownship_mile -= 0.5
-    elif quater == "NE":
+    elif quarter == "NE":
         dran_mile += 0.5
-    elif quater == "SW":
+    elif quarter == "SW":
         dtownship_mile -= 0.5
-    elif quater == "SE":
+    elif quarter == "SE":
         pass
     else:
         print("quater is wrong")
