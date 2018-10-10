@@ -1,0 +1,114 @@
+import math
+import numpy
+
+# formula for calculating a new lat/long with given lat/long, bearing, 
+# and distance
+
+# calculate_latlong: consumes a parameter d - distance, and a lat/long (decimal)
+# return new lat/long calculated based on the d and lat/long
+    # d - float
+    # latlong - a list with two elements
+def calculate_latlong(d, brng, origin):
+    R = 6378.1 # Radius of the Earth
+    
+    lat = math.radians(origin[0])
+    lon = math.radians(origin[1])
+    
+    newlat = math.asin(math.sin(lat)*math.cos(d/R) + \
+             math.cos(lat)*math.sin(d/R)*math.cos(brng))
+
+    newlon = lon + math.atan2(math.sin(brng)*math.sin(d/R)*math.cos(lat),
+                              math.cos(d/R)-math.sin(lat)*math.sin(lat))
+    
+    newlat = math.degrees(newlat)
+    newlon = math.degrees(newlon)
+    
+    return [newlat, newlon]
+
+def geopy_func(d, brng, lat,long):
+    origin = geopy.Point(49.000649, -97.457889)
+    destination = VincentyDistance(kilometers=15).destination(origin, 1.57)
+    lat2,lon2 = destination.latitude, destination.longitude
+    return lat2, lon2
+
+
+# Extract information from legal description
+# currently it has to follow the format of X#-X#-#X
+    # here X is quater such as NE N W
+    # here # is township, or range such as 13, 29
+
+def extract_info(legal_description):
+    origin = [49.000649, -97.457889]
+    # location matrix
+    loc_matrix = np.array([[31,32,33,34,35,36],
+                           [30,29,28,27,26,25],
+                           [19,20,21,22,23,24],
+                           [18,17,16,15,14,13],
+                           [7,8,9,10,11,12],
+                           [6,5,4,3,2,1]], dtype=np.int8)
+    '''
+    list: info_part
+        [0] quater and section
+        [1] township
+        [2] range and direction away from the meridian
+    '''
+    info_part = legal_description.split('-')
+    
+    quater = info_part[0][:2]
+    section = int(info_part[0][2:])
+    township = int(info_part[1])
+    ran = int(info_part[2][0])
+    direction = info_part[2][1]
+    print(quater, section, township, ran, direction)
+    
+    dtownship_mile = township * 6
+    dran_mile = ran * 6
+    print(dtownship_mile, dran_mile)
+    
+    # locate section
+    print(loc_matrix)
+    loc = np.where(loc_matrix == section)
+    print(loc)
+    
+    to_township = (6 - loc[1].item()) - 1
+    to_range = (6 - loc[0].item()) - 1
+    
+    if direction == "W":
+        # add difference in section to range
+        dran_mile += to_range
+        dtownship_mile += to_township
+    elif direction == "E":
+        dran_mile -= to_range
+        dtownship_mile += to_township
+    else:
+        print('direction is wrong')
+        return
+    
+    print(dtownship_mile, dran_mile)
+
+    
+    # calculate the distance in the quater
+    if quater == "NW":
+        dran_mile += 0.5
+        dtownship_mile += 0.5
+    elif quater == "NE":
+        dran_mile += 0.5
+    elif quater == "SW":
+        dtownship_mile += 0.5
+    elif quater == "SE":
+        pass
+    else:
+        print("quater is wrong")
+        return
+    
+    print(dtownship_mile, dran_mile)
+    
+    # convert mile to kilometers
+    conv_fac = 1.609344
+    dran_kilo = dran_mile * conv_fac
+    dtownship_kilo = dtownship_mile * conv_fac
+    brng = math.atan2(dran_kilo, dtownship_kilo)
+    to_coord_distance = math.sqrt((dran_kilo**2) + (dtownship_kilo**2))
+    
+    new_coord = calculate_latlong(to_coord_distance, brng, origin)
+    return new_coord
