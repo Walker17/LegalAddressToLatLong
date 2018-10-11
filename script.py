@@ -40,6 +40,15 @@ def calculate_latlong(d, brng, origin):
 # Currently can only query from the first meridian
 
 def extract_info(legal_description):
+    '''
+    For batch conversion, you can add a 'try...except...' so that it can automatically
+    avoid the format of the legal address that does not match the format that the script
+    can deal with.
+    You don't need to modify the code, just use 'try' cover all the code in this function,
+    at the end of the code, after 'return new_coord', add the except: return None
+    
+    You can remove all the print to avoid mass of message to be printed out
+    '''
     # lat - the boundary of Canada and United States, long - the prime meridian
     origin = [49.000649, -97.457889]
     
@@ -95,7 +104,7 @@ def extract_info(legal_description):
         pass
     else:
         print("quater is wrong")
-        return
+        return None
     
     # identify the direction to start from the first meridian, and do the calculation
     if direction == "W":
@@ -119,7 +128,7 @@ def extract_info(legal_description):
         
     else:
         print('direction is wrong')
-        return
+        return None
     
     print(dtownship_mile, dran_mile)
     
